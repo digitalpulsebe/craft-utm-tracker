@@ -1,0 +1,33 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+
+{% import "_includes/forms" as forms %}
+
+{{ forms.selectField({
+    label: "Storage method",
+    instructions: "Where to save the tracked data.",
+    id: "storageMethod",
+    name: "storageMethod",
+    options: {
+        'session': "Session",
+        'cookies': "Cookies",
+    },
+    value: settings.storageMethod,
+    errors: settings.getErrors("storageMethod"),
+}) }}
+
+{{ forms.editableTableField({
+    label: 'Trackable tag keys',
+    instructions: 'These query parameters will be saved in the session when set in the request URL',
+    name: "trackableTags",
+    id: "trackableTags",
+    cols: {
+        'key': {
+            type: 'textarea',
+            heading: 'Tag key',
+            rows: 1
+        },
+    },
+    rows: settings.trackableTags,
+    addRowLabel: 'Add a tag key',
+    errors: settings.getErrors('trackableTags'),
+})|spaceless }}

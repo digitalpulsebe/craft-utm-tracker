@@ -1,0 +1,115 @@
+<?php
+/**
+ * UTM Tracker plugin for Craft CMS 3.x
+ *
+ * Track landing query parameters in user session
+ *
+ * @link      https://www.digitalpulse.be/
+ * @copyright Copyright (c) 2022 Digital Pulse
+ */
+
+namespace digitalpulsebe\utmtracker;
+
+use craft\web\Request;
+use digitalpulsebe\utmtracker\services\UtmTrackerService as UtmTrackerServiceService;
+use digitalpulsebe\utmtracker\storage\Session;
+use digitalpulsebe\utmtracker\storage\StorageMethod;
+use digitalpulsebe\utmtracker\variables\UtmTrackerVariable;
+use digitalpulsebe\utmtracker\models\Settings;
+
+use Craft;
+use craft\base\Plugin;
+use craft\services\Plugins;
+use craft\events\PluginEvent;
+use craft\web\twig\variables\CraftVariable;
+
+use yii\base\Event;
+
+/**
+ *
+ * @author    Digital Pulse
+ * @package   UtmTracker
+ * @since     1.0.0
+ *
+ * @property  UtmTrackerServiceService $utmTrackerService
+ * @property  Settings $settings
+ * @method    Settings getSettings()
+ */
+class UtmTracker extends Plugin
+{
+    // Static Properties
+    // =========================================================================
+
+    /**
+     * Static property that is an instance of this plugin class so that it can be accessed via
+     * UtmTracker::$plugin
+     *
+     * @var UtmTracker
+     */
+    public static $plugin;
+
+    public ?StorageMethod $storage;
+
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public $schemaVersion = '1.0.0';
+
+    /**
+     * @inheritdoc
+     */
+    public $hasCpSettings = true;
+
+    public function init()
+    {
+        parent::init();
+        self::$plugin = $this;
+
+        // Register our variables
+        Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function (Event $event) {
+                /** @var CraftVariable $variable */
+                $variable = $event->sender;
+                $variable->set('utmTracker', UtmTrackerVariable::class);
+            }
+        );
+
+        // hook on site requests
+        $this->storage = $this->utmTrackerService->processRequest(Craft::$app->request);
+    }
+
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * Creates and returns the model used to store the plugin’s settings.
+     *
+     * @return \craft\base\Model|null
+     */
+    protected function createSettingsModel()
+    {
+        return new Settings();
+    }
+
+    /**
+     * Returns the rendered settings HTML, which will be inserted into the content
+     * block on the settings page.
+     *
+     * @return string The rendered settings HTML
+     */
+    protected function settingsHtml(): string
+    {
+        return Craft::$app->view->renderTemplate(
+            'utm-tracker/settings',
+            [
+                'settings' => $this->getSettings()
+            ]
+        );
+    }
+}

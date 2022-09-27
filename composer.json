@@ -1,0 +1,45 @@
+{
+    "name": "digitalpulsebe/craft-utm-tracker",
+    "description": "Track landing query parameters in user session",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "utm tracker"
+    ],
+    "support": {
+        "docs": "https://github.com/https://github.com/digitalpulsebe/utm-tracker/blob/master/README.md",
+        "issues": "https://github.com/https://github.com/digitalpulsebe/utm-tracker/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Digital Pulse",
+            "homepage": "https://www.digitalpulse.be/"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "craftcms/cms": "^3.7.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "digitalpulsebe\\utmtracker\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "UTM Tracker",
+        "handle": "utm-tracker",
+        "developer": "Digital Pulse",
+        "developerUrl": "https://www.digitalpulse.be/",
+        "documentationUrl": "https://github.com/https://github.com/digitalpulsebe/utm-tracker/blob/master/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/https://github.com/digitalpulsebe/utm-tracker/master/CHANGELOG.md",
+        "components": {
+            "utmTrackerService": "digitalpulsebe\\utmtracker\\services\\UtmTrackerService"
+        },
+        "class": "digitalpulsebe\\utmtracker\\UtmTracker"
+    }
+}
