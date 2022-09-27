@@ -17,11 +17,24 @@ To install the plugin, follow these instructions.
 
         cd /path/to/project
 
-2. Then tell Composer to load the plugin:
+2. Add the repository to composer.json
 
-        composer require https://github.com/digitalpulsebe/craft-utm-tracker
+```
+{
+   "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/digitalpulsebe/craft-utm-tracker"
+        }
+   ]
+}
+```
 
-3. In the Control Panel, go to Settings → Plugins and click the “Install” button for UTM Tracker.
+3. Then tell Composer to load the plugin:
+
+        composer require digitalpulsebe/craft-utm-tracker
+
+4. In the Control Panel, go to Settings → Plugins and click the “Install” button for UTM Tracker.
 
 ## Configuring UTM Tracker
 
