@@ -2,7 +2,7 @@
     "name": "digitalpulsebe/craft-utm-tracker",
     "description": "Track landing query parameters in user session",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "keywords": [
         "craft",
         "cms",
