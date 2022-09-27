@@ -11,8 +11,8 @@
         "utm tracker"
     ],
     "support": {
-        "docs": "https://github.com/https://github.com/digitalpulsebe/utm-tracker/blob/master/README.md",
-        "issues": "https://github.com/https://github.com/digitalpulsebe/utm-tracker/issues"
+        "docs": "https://github.com/digitalpulsebe/craft-utm-tracker/blob/master/README.md",
+        "issues": "https://github.com/digitalpulsebe/craft-utm-tracker/issues"
     },
     "license": "MIT",
     "authors": [
@@ -35,8 +35,8 @@
         "handle": "utm-tracker",
         "developer": "Digital Pulse",
         "developerUrl": "https://www.digitalpulse.be/",
-        "documentationUrl": "https://github.com/https://github.com/digitalpulsebe/utm-tracker/blob/master/README.md",
-        "changelogUrl": "https://raw.githubusercontent.com/https://github.com/digitalpulsebe/utm-tracker/master/CHANGELOG.md",
+        "documentationUrl": "https://github.com/digitalpulsebe/craft-utm-tracker/blob/master/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/digitalpulsebe/craft-utm-tracker/master/CHANGELOG.md",
         "components": {
             "utmTrackerService": "digitalpulsebe\\utmtracker\\services\\UtmTrackerService"
         },
