@@ -5,6 +5,7 @@ namespace digitalpulsebe\utmtracker\storage;
 use Craft;
 use craft\web\Request;
 use digitalpulsebe\utmtracker\models\Parameters;
+use digitalpulsebe\utmtracker\UtmTracker;
 
 class Cookie implements StorageMethod
 {
@@ -24,6 +25,8 @@ class Cookie implements StorageMethod
 
     public function __construct(Request $request)
     {
+        $this->cookieName = UtmTracker::$plugin->getSettings()->cookieName ?? $this->cookieName;
+
         if (Craft::$app->request->getCookies()->has($this->cookieName)) {
             $this->parameters = unserialize(Craft::$app->request->getCookies()->get($this->cookieName));
             $this->parameters->storeQueryParameters($request);

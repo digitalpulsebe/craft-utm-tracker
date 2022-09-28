@@ -13,6 +13,12 @@ class Settings extends Model
     public string $storageMethod = 'session';
 
     /**
+     * name of the cookie of the cookies storage method
+     * @var string
+     */
+    public string $cookieName = 'utm_tracking_parameters';
+
+    /**
      * List of query parameter keys to keep track of
      * @var string[]
      */
