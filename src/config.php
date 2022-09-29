@@ -36,5 +36,6 @@ return [
         ['key' => 'utm_content'],
         ['key' => 'custom_utm_query_parameter'],
     ],
-    'cookieName' => 'custom_utm_tracking_parameters'
+    'cookieName' => 'custom_utm_tracking_parameters',
+    'cookieLifetime' => 172800 // two days in seconds
 ];

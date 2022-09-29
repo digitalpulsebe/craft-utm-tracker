@@ -19,6 +19,12 @@ class Settings extends Model
     public string $cookieName = 'utm_tracking_parameters';
 
     /**
+     * the lifetime of the cookie in seconds
+     * @var int
+     */
+    public int $cookieLifetime = 172800;
+
+    /**
      * List of query parameter keys to keep track of
      * @var string[]
      */

@@ -39,6 +39,11 @@ By default, you should keep track of these UTM tags:
 
 Also, the landing URL and referrer URL are tracked when the session is created.
 
+Other configuration (config/utm-tracker.php) options are: 
+
+- 'cookieName': the name of the cookie (when used)
+- 'cookieLifetime': lifetime of the cookie in seconds (when used)
+
 ## Usage
 
 Available twig variables:
@@ -76,8 +81,8 @@ example:
 }, true) %}
 ```
 
-## Notice
+## Notice: tracking user data
 
-Don't forget to notify the users details are tracked to comply to the GDPR rules.
+Don't forget to notify the user details are tracked to comply to the GDPR rules.
 When you select the cookie storage method an extra cookie is created.
-The name of the cookie is configurable in the config file. By default, the key is 'utm_tracking_parameters'.
+The name and lifetime of the cookie is configurable in the config file. By default, the key is 'utm_tracking_parameters'.
