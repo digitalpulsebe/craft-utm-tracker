@@ -37,9 +37,9 @@ class Settings extends Model
     ];
 
     /**
-     * @return array
+     * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             ['trackableTags', 'required'],

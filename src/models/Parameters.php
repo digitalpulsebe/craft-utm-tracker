@@ -27,7 +27,7 @@ class Parameters extends Model
         $instance = new self();
 
         $instance->landingUrl = StringHelper::escape($request->getAbsoluteUrl());
-        $instance->referrerUrl = StringHelper::escape($request->getReferrer());
+        $instance->referrerUrl = $request->getReferrer() ? StringHelper::escape($request->getReferrer()) : null;
         $instance->storeQueryParameters($request);
 
         return $instance;
@@ -39,9 +39,12 @@ class Parameters extends Model
 
         foreach($tagsToTrack as $tagKey) {
             if ($request->get($tagKey)) {
-                $clean_value = StringHelper::stripHtml($request->getQueryParam($tagKey));
-                $clean_value = StringHelper::escape($clean_value);
-                $this->queryParameters[$tagKey] = $clean_value;
+                $value = $request->getQueryParam($tagKey);
+                if ($value) {
+                    $clean_value = StringHelper::stripHtml($value);
+                    $clean_value = StringHelper::escape($clean_value);
+                    $this->queryParameters[$tagKey] = $clean_value;
+                }
             }
         }
     }
