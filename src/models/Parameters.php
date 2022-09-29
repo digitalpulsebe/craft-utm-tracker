@@ -11,8 +11,10 @@
 namespace digitalpulsebe\utmtracker\models;
 
 use craft\base\Model;
+use craft\helpers\StringHelper;
 use craft\web\Request;
 use digitalpulsebe\utmtracker\UtmTracker;
+use voku\helper\AntiXSS;
 
 class Parameters extends Model
 {
@@ -24,8 +26,8 @@ class Parameters extends Model
     static function createFromRequest(Request $request): self {
         $instance = new self();
 
-        $instance->landingUrl = $request->getAbsoluteUrl();
-        $instance->referrerUrl = $request->getReferrer();
+        $instance->landingUrl = StringHelper::escape($request->getAbsoluteUrl());
+        $instance->referrerUrl = StringHelper::escape($request->getReferrer());
         $instance->storeQueryParameters($request);
 
         return $instance;
@@ -37,7 +39,9 @@ class Parameters extends Model
 
         foreach($tagsToTrack as $tagKey) {
             if ($request->get($tagKey)) {
-                $this->queryParameters[$tagKey] = $request->get($tagKey);
+                $clean_value = StringHelper::stripHtml($request->getQueryParam($tagKey));
+                $clean_value = StringHelper::escape($clean_value);
+                $this->queryParameters[$tagKey] = $clean_value;
             }
         }
     }
