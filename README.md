@@ -25,21 +25,9 @@ To install the plugin, follow these instructions.
 
 ## Configuring UTM Tracker
 
-Configure options in the Craft control panel or create a file in config/utm-tracker.php with content.
+Configure options in the Craft control panel or create a file in config/utm-tracker.php as a copy of [config.php](src/config.php).
 
-
-```
-<?php
-
-return [
-   'storageMethod' => 'session',
-   'trackableTags' => [
-      ['key' => 'custom_utm_query_parameter'],
-      ['key' => 'custom_utm_query_parameter_2'],
-   ],
-];
-
-```
+![Screenshot](resources/img/screenshot_settings.png)
 
 By default, you should keep track of these UTM tags:
 
@@ -88,3 +76,8 @@ example:
 }, true) %}
 ```
 
+## Notice
+
+Don't forget to notify the users details are tracked to comply to the GDPR rules.
+When you select the cookie storage method an extra cookie is created.
+The name of the cookie is configurable in the config file. By default, the key is 'utm_tracking_parameters'.
