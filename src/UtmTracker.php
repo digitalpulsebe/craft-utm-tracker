@@ -10,17 +10,14 @@
 
 namespace digitalpulsebe\utmtracker;
 
-use craft\web\Request;
+use craft\base\Model;
 use digitalpulsebe\utmtracker\services\UtmTrackerService as UtmTrackerServiceService;
-use digitalpulsebe\utmtracker\storage\Session;
 use digitalpulsebe\utmtracker\storage\StorageMethod;
 use digitalpulsebe\utmtracker\variables\UtmTrackerVariable;
 use digitalpulsebe\utmtracker\models\Settings;
 
 use Craft;
 use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
 use craft\web\twig\variables\CraftVariable;
 
 use yii\base\Event;
@@ -56,12 +53,12 @@ class UtmTracker extends Plugin
     /**
      * @inheritdoc
      */
-    public $schemaVersion = '1.0.0';
+    public string $schemaVersion = '1.0.0';
 
     /**
      * @inheritdoc
      */
-    public $hasCpSettings = true;
+    public bool $hasCpSettings = true;
 
     public function init()
     {
@@ -90,9 +87,9 @@ class UtmTracker extends Plugin
     /**
      * Creates and returns the model used to store the plugin’s settings.
      *
-     * @return \craft\base\Model|null
+     * @return Model|null
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?Model
     {
         return new Settings();
     }
@@ -101,9 +98,9 @@ class UtmTracker extends Plugin
      * Returns the rendered settings HTML, which will be inserted into the content
      * block on the settings page.
      *
-     * @return string The rendered settings HTML
+     * @return string|null The rendered settings HTML
      */
-    protected function settingsHtml(): string
+    protected function settingsHtml(): ?string
     {
         return Craft::$app->view->renderTemplate(
             'utm-tracker/settings',
