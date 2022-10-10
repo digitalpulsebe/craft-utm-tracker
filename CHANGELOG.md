@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - more documentation
 - catch deserialization errors
 
+## 1.3.1 - 2022-10-10
+### Updated
+- avoid typed property error
+
 ## 1.3.0 - 2022-10-10
 ### Updated
 - UI settings cookieName and cookieLifetime
