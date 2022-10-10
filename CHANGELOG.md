@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.1.0 - 2022-10-10
+### Updated
+- UI settings cookieName and cookieLifetime
+- absoluteLandingUrl and landingUrl variable without querystring
+- more documentation
+- catch deserialization errors
+
+## 1.3.0 - 2022-10-10
+### Updated
+- UI settings cookieName and cookieLifetime
+- absoluteLandingUrl and landingUrl variable without querystring
+- more documentation
+- catch deserialization errors
+
 ## 2.0.1 - 2022-09-30
 ### Updated
 - docs
