@@ -34,7 +34,7 @@ class UtmTrackerService extends Component
                 throw new \Exception("Storage method $storageMethod unknown for UTM Tracker");
             }
 
-            Craft::debug($storage->getParameters()->toArray(), 'utm_tracker');
+            Craft::info($storage->getParameters()->toArray(), 'utm_tracker');
             Craft::info('UTM Tracker plugin loaded', 'utm_tracker');
 
             return $storage;
