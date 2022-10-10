@@ -31,11 +31,11 @@ Configure options in the Craft control panel or create a file in config/utm-trac
 
 By default, you should keep track of these UTM tags:
 
-- utm_source
-- utm_medium
-- utm_campaign
-- utm_term
-- utm_content
+- utm_source (Campaign Source, example: Google)
+- utm_medium (Campaign Medium, example: email)
+- utm_campaign (Campaign Name, example: xmas2022)
+- utm_term (Campaign Term, example: christmas+presents)
+- utm_content (Campaign Content, example: version+A)
 
 Also, the landing URL and referrer URL are tracked when the session is created.
 
@@ -50,9 +50,19 @@ Available twig variables:
 
 ```
 {{ craft.utmTracker.landingUrl }}
-{{ craft.utmTracker.referrerUrl }}
+  {# example: https://example.com/pages/detail #}
+  
+{{ craft.utmTracker.absoluteLandingUrl }}
+  {# with query parameters, example: https://example.com/pages/detail?param=1 #}
+  
+{{ craft.utmTracker.referrerUrl }} 
+  {# example: https://google.com/ #}
+  
 {{ craft.utmTracker.tag('utm_campaign') }}
+  {# one tag by key #}
+
 {{ craft.utmTracker.tags|json_encode }}
+  {# all tags in an array #}
 ```
 
 ### Using UTM Tracker in combination with Freeform

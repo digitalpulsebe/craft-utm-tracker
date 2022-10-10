@@ -13,7 +13,33 @@
     },
     value: settings.storageMethod,
     errors: settings.getErrors("storageMethod"),
+    toggle: true
 }) }}
+
+<div id="cookies"{% if settings.storageMethod != 'cookies' %} class="hidden"{% endif %}>
+    <div id="storageMethod-cookies-fields">
+        {{ forms.textField({
+            label: "Cookie name",
+            instructions: "The key to store the cookie data",
+            id: 'cookieName',
+            name: 'cookieName',
+            value: settings.cookieName,
+            required: true,
+            errors: settings.getErrors('cookieName')
+        }) }}
+        {{ forms.textField({
+            label: "Cookie lifetime (seconds)",
+            instructions: "The number of seconds to let the cookie expire",
+            id: 'cookieLifetime',
+            name: 'cookieLifetime',
+            value: settings.cookieLifetime,
+            errors: settings.getErrors('cookieLifetime'),
+            type: 'number',
+            required: true,
+            min: 0,
+        }) }}
+    </div>
+</div>
 
 {{ forms.editableTableField({
     label: 'Trackable tag keys',
@@ -30,4 +56,5 @@
     rows: settings.trackableTags,
     addRowLabel: 'Add a tag key',
     errors: settings.getErrors('trackableTags'),
+    required: true
 })|spaceless }}

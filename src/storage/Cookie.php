@@ -35,11 +35,17 @@ class Cookie implements StorageMethod
         $this->cookieLifetime = UtmTracker::$plugin->getSettings()->cookieLifetime ?? $this->cookieLifetime;
 
         if (Craft::$app->request->getCookies()->has($this->cookieName)) {
-            $this->parameters = unserialize(Craft::$app->request->getCookies()->get($this->cookieName));
-            $this->parameters->storeQueryParameters($request);
+            try {
+                $this->parameters = unserialize(Craft::$app->request->getCookies()->get($this->cookieName));
+                $this->parameters->storeQueryParameters($request);
 
-            Craft::info('UTM Tracker stored parameters loaded from existing cookie', 'utm_tracker');
-        } else {
+                Craft::info('UTM Tracker stored parameters loaded from existing cookie', 'utm_tracker');
+            } catch (\Throwable $exception) {
+                Craft::error('UTM Tracker stored parameters could not be loaded from cookie: ' . $exception->getMessage(), 'utm_tracker');
+            }
+        }
+
+        if (empty($this->parameters)) {
             $this->parameters = Parameters::createFromRequest($request);
             $this->isNewUser = true;
 

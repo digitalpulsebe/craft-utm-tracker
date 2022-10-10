@@ -42,6 +42,12 @@ class Settings extends Model
     public function rules()
     {
         return [
+            ['storageMethod', 'in', 'range' => ['session', 'cookies']],
+            [['cookieName', 'cookieLifetime'], 'required', 'when' => function($model) {
+                return $model->storageMethod == 'cookies';
+            }],
+            ['cookieLifetime', 'integer', 'min' => 0],
+            ['cookieName', 'match', 'pattern'=>'/^[a-zA-Z0-9\_]+$/'],
             ['trackableTags', 'required'],
         ];
     }
