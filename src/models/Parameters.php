@@ -20,13 +20,15 @@ class Parameters extends Model
 {
 
     public array $queryParameters = [];
-    public string $landingUrl;
+    public string $absoluteLandingUrl = '';
+    public string $landingUrl = '';
     public ?string $referrerUrl;
 
     static function createFromRequest(Request $request): self {
         $instance = new self();
 
-        $instance->landingUrl = StringHelper::escape($request->getAbsoluteUrl());
+        $instance->absoluteLandingUrl = StringHelper::escape($request->getAbsoluteUrl());
+        $instance->landingUrl = StringHelper::escape($request->getHostInfo() . '/' . $request->getPathInfo());
         $instance->referrerUrl = $request->getReferrer() ? StringHelper::escape($request->getReferrer()) : null;
         $instance->storeQueryParameters($request);
 
