@@ -20,8 +20,8 @@ class Parameters extends Model
 {
 
     public array $queryParameters = [];
-    public string $absoluteLandingUrl;
-    public string $landingUrl;
+    public string $absoluteLandingUrl = '';
+    public string $landingUrl = '';
     public ?string $referrerUrl;
 
     static function createFromRequest(Request $request): self {
