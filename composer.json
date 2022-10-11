@@ -45,5 +45,8 @@
             "yiisoft/yii2-composer": true,
             "craftcms/plugin-installer": true
         }
+    },
+    "require-dev": {
+        "verbb/formie": "2.0"
     }
 }
