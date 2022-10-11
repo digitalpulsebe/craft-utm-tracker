@@ -40,5 +40,8 @@
             "utmTrackerService": "digitalpulsebe\\utmtracker\\services\\UtmTrackerService"
         },
         "class": "digitalpulsebe\\utmtracker\\UtmTracker"
+    },
+    "require-dev": {
+        "verbb/formie": "1.6"
     }
 }
