@@ -19,7 +19,9 @@ use digitalpulsebe\utmtracker\models\Settings;
 use Craft;
 use craft\base\Plugin;
 use craft\web\twig\variables\CraftVariable;
-
+use digitalpulsebe\utmtracker\formie\TrackedField;
+use verbb\formie\events\RegisterFieldsEvent;
+use verbb\formie\services\Fields;
 use yii\base\Event;
 
 /**
@@ -78,6 +80,14 @@ class UtmTracker extends Plugin
 
         // hook on site requests
         $this->storage = $this->utmTrackerService->processRequest(Craft::$app->request);
+
+        // register custom field for Formie
+        if (class_exists(Fields::class)) {
+            Event::on(Fields::class, Fields::EVENT_REGISTER_FIELDS, function(RegisterFieldsEvent $event) {
+                $event->fields[] = TrackedField::class;
+            });
+        }
+
     }
 
 

@@ -69,6 +69,16 @@ Available twig variables:
   {# all tags in an array #}
 ```
 
+### Using UTM Tracker in combination with Formie
+
+1. Drag a custom field 'Tracked Field' on your form
+2. Name your field whatever you want, select the source in the dropdown
+3. When selecting a Query Parameter (tag) as a source, select the key from the list. It is the same list as the tags you defined in the settings of this app.
+
+![Screenshot](resources/img/screenshot_formie_settings_01.png)
+
+![Screenshot](resources/img/screenshot_formie_settings_02.png)
+
 ### Using UTM Tracker in combination with Freeform
 
 1. Create hidden fields and add them to your form
@@ -81,18 +91,6 @@ example:
       'myHiddenField': craft.utmTracker.landingUrl
    }
 }) }}
-```
-
-### Using UTM Tracker in combination with Formie
-
-1. Create hidden fields and add them to your form
-2. Before rendering, pass along the values to formie
-
-example: 
-```
-{% do craft.formie.populateFormValues(form, {
-    myHiddenField: craft.utmTracker.landingUrl
-}, true) %}
 ```
 
 ## Notice: tracking user data
