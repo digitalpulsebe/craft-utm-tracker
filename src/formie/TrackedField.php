@@ -58,6 +58,11 @@ class TrackedField extends Hidden
                 }, UtmTracker::$plugin->settings->getTrackableTagsArray()),
                 'if' => '$get(defaultOption).value == tag'
             ]),
+            SchemaHelper::variableTextField([
+                'label' => 'Default Value',
+                'help' => 'Entering a default value will place the value in the field when the tracked field value is empty.',
+                'name' => 'defaultValue',
+            ]),
         ];
     }
 
@@ -83,6 +88,10 @@ class TrackedField extends Hidden
                     $value = json_encode($parameters->toArray());
                 }
             }
+        }
+
+        if ($value === null) {
+            $value = $this->getDefaultValue();
         }
 
         return $value;
