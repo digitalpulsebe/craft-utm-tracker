@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.2 - 2023-08-10
+### Updated
+- new logo
+
 ## 1.4.1 - 2023-02-16
 ### Added
 - default value for Formie custom Field
