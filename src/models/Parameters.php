@@ -14,7 +14,6 @@ use craft\base\Model;
 use craft\helpers\StringHelper;
 use craft\web\Request;
 use digitalpulsebe\utmtracker\UtmTracker;
-use voku\helper\AntiXSS;
 
 class Parameters extends Model
 {

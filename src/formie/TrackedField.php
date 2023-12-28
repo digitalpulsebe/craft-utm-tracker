@@ -11,6 +11,31 @@ use verbb\formie\positions\Hidden as HiddenPosition;
 class TrackedField extends Hidden
 {
 
+    public function init(): void
+    {
+        parent::init();
+
+        if (!\Craft::$app->getRequest()->getIsConsoleRequest()) {
+            $storage = UtmTracker::$plugin->storage;
+
+            if ($storage) {
+                $parameters = $storage->getParameters();
+
+                if ($this->defaultOption === 'absoluteLandingUrl') {
+                    $this->defaultValue = $parameters->absoluteLandingUrl;
+                } elseif ($this->defaultOption === 'landingUrl') {
+                    $this->defaultValue = $parameters->landingUrl;
+                } elseif ($this->defaultOption === 'referrerUrl') {
+                    $this->defaultValue = $parameters->referrerUrl;
+                } elseif ($this->defaultOption === 'tag') {
+                    $this->defaultValue = $parameters->getQueryParameter($this->queryParameter);
+                } elseif ($this->defaultOption === 'all') {
+                    $this->defaultValue = json_encode($parameters->toArray());
+                }
+            }
+        }
+    }
+
     public static function displayName(): string
     {
         return 'Tracked Field';
@@ -66,37 +91,6 @@ class TrackedField extends Hidden
         ];
     }
 
-    public function getFieldValue($element, $handle = '', $attributePrefix = '')
-    {
-        $value = null;
-
-        if (!\Craft::$app->getRequest()->getIsConsoleRequest()) {
-            $storage = UtmTracker::$plugin->storage;
-
-            if ($storage) {
-                $parameters = $storage->getParameters();
-
-                if ($this->defaultOption === 'absoluteLandingUrl') {
-                    $value = $parameters->absoluteLandingUrl;
-                } elseif ($this->defaultOption === 'landingUrl') {
-                    $value = $parameters->landingUrl;
-                } elseif ($this->defaultOption === 'referrerUrl') {
-                    $value = $parameters->referrerUrl;
-                } elseif ($this->defaultOption === 'tag') {
-                    $value = $parameters->getQueryParameter($this->queryParameter);
-                } elseif ($this->defaultOption === 'all') {
-                    $value = json_encode($parameters->toArray());
-                }
-            }
-        }
-
-        if ($value === null) {
-            $value = $this->getDefaultValue();
-        }
-
-        return $value;
-    }
-
     /**
      * @inheritDoc
      */
@@ -113,17 +107,5 @@ class TrackedField extends Hidden
     public static function getFrontEndInputTemplatePath(): string
     {
         return 'fields/hidden';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getFieldDefaults(): array
-    {
-        return [
-            'labelPosition' => HiddenPosition::class,
-            'defaultOption' => 'landingUrl',
-            'includeInEmail' => false,
-        ];
     }
 }
