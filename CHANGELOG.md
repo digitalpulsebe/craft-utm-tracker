@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.3.0 - 2024-01-16
+### Added
+- support for full page caching
+### Fixed
+- settings editableTableField column type
+
 ## 2.2.2 - 2023-08-10
 ### Updated
 - new logo
