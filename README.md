@@ -52,7 +52,7 @@ Other configuration (config/utm-tracker.php) options are:
 
 Available twig variables:
 
-```
+```twig
 {{ craft.utmTracker.landingUrl }}
   {# example: https://example.com/pages/detail #}
   
@@ -85,12 +85,48 @@ Available twig variables:
 2. Render tag with default value filled from the available variable properties
 
 example: 
-```
+```twig
 {{ form.render({
    'storedValues': {
       'myHiddenField': craft.utmTracker.landingUrl
    }
 }) }}
+```
+
+## Tracking in combination with full page caching
+
+When the pages are cached entirely (using Blitz, Varnish...) there is no way for Craft CMS to pick up the traffic.
+You will need to send and retrieve data using javascript asynchronously. 
+But beware: it might increase server load. If your application has very high traffic, consider a javascript only solution.
+
+### Sending data to the backend
+
+Put this in your twig layout template file:
+
+```twig
+{{ craft.utmTracker.reportScript() }}
+```
+
+It will make a POST call to the Craft CMS backend to avoid caching.
+
+### Retrieving data
+
+To use the data on cached pages you will need to retrieve it from the api. When your forms (like Formie) are cached, 
+you will also need to fill in the hidden fields using javascript.
+
+Make a call to `https://example.com/actions/utm-tracker/api/data` and you will get this json
+
+```json
+{
+    "data": {
+        "queryParameters": {
+          "utm_campaign": "campaign"
+        },
+        "absoluteLandingUrl": "https://example.com/landing-page?utm_campaign=campaign",
+        "landingUrl": "https://example.com/landing-page",
+        "referrerUrl": null
+    }
+}
 ```
 
 ## Notice: tracking user data
