@@ -25,7 +25,7 @@ class UtmTrackerService extends Component
         if ($request instanceof Request && $request->isSiteRequest) {
 
             $storageMethod = UtmTracker::$plugin->getSettings()->storageMethod;
-            
+
             if ($storageMethod == 'session') {
                 $storage = new Session($request);
             } elseif ($storageMethod == 'cookies') {
