@@ -10,8 +10,13 @@
 
 namespace digitalpulsebe\utmtracker\variables;
 
+use Craft;
+use craft\helpers\App;
+use craft\helpers\Template;
+use craft\web\View;
 use digitalpulsebe\utmtracker\models\Parameters;
 use digitalpulsebe\utmtracker\UtmTracker;
+use Twig\Markup;
 
 class UtmTrackerVariable
 {
@@ -43,6 +48,13 @@ class UtmTrackerVariable
     public function parameters(): ?Parameters
     {
         return UtmTracker::$plugin->storage->getParameters();
+    }
+
+    public function reportScript(): Markup
+    {
+        $templatePath = 'utm-tracker/_script/report';
+
+        return Template::raw(Craft::$app->getView()->renderTemplate($templatePath, [], 'cp'));
     }
 
 }

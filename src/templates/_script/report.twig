@@ -1,0 +1,10 @@
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        let currentURL = new URL(window.location.href);
+        currentURL.searchParams.set('action', 'utm-tracker/report/url');
+        fetch(currentURL.href, {
+            method: "POST",
+        });
+    });
+</script>
+
