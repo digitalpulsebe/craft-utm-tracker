@@ -1,4 +1,4 @@
-# UTM Tracker plugin for Craft CMS 3.x and 4.x
+# UTM Tracker plugin for Craft CMS 3, 4 and 5
 
 Get landing page location and query parameters when the user lands on the site. 
 Keeps them in the session for use in forms or other usage in twig variables.
@@ -7,7 +7,7 @@ Keeps them in the session for use in forms or other usage in twig variables.
 
 ## Requirements
 
-This plugin requires Craft CMS 3.7 or Craft CMS 4.
+This plugin requires Craft CMS 3.7, 4 or 5.
 
 ## Installation
 
@@ -20,6 +20,10 @@ To install the plugin, follow these instructions.
 2. Then tell Composer to load the plugin:
 
         composer require digitalpulsebe/craft-utm-tracker
+
+   Or when using Craft 4, use version 2:
+
+        composer require digitalpulsebe/craft-utm-tracker:^2.0.0
 
    Or when using Craft 3, use version 1:
 
@@ -111,8 +115,7 @@ It will make a POST call to the Craft CMS backend to avoid caching.
 
 ### Retrieving data
 
-To use the data on cached pages you will need to retrieve it from the api. When your forms (like Formie) are cached, 
-you will also need to fill in the hidden fields using javascript.
+To use the data on cached pages you will need to retrieve it from the api.
 
 Make a call to `https://example.com/actions/utm-tracker/api/data` and you will get this json
 
