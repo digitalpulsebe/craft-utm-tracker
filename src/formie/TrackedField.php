@@ -6,7 +6,6 @@ use craft\helpers\Html;
 use digitalpulsebe\utmtracker\UtmTracker;
 use verbb\formie\fields\formfields\Hidden;
 use verbb\formie\helpers\SchemaHelper;
-use verbb\formie\positions\Hidden as HiddenPosition;
 
 class TrackedField extends Hidden
 {
@@ -14,6 +13,7 @@ class TrackedField extends Hidden
     public function init(): void
     {
         parent::init();
+        $this->visibility = 'disabled';
 
         if (!\Craft::$app->getRequest()->getIsConsoleRequest()) {
             $storage = UtmTracker::$plugin->storage;

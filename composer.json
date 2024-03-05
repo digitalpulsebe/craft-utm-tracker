@@ -47,6 +47,6 @@
         }
     },
     "require-dev": {
-        "verbb/formie": "^3.0.0-beta.1"
+        "verbb/formie": "^3.0.0-beta.2"
     }
 }
