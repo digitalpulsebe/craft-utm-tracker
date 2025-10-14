@@ -27,7 +27,7 @@ class TrackedField extends Hidden
                     $this->defaultValue = $parameters->landingUrl;
                 } elseif ($this->defaultOption === 'referrerUrl') {
                     $this->defaultValue = $parameters->referrerUrl;
-                } elseif ($this->defaultOption === 'tag') {
+                } elseif ($this->defaultOption === 'tag' && $this->queryParameter) {
                     $this->defaultValue = $parameters->getQueryParameter($this->queryParameter);
                 } elseif ($this->defaultOption === 'all') {
                     $this->defaultValue = json_encode($parameters->toArray());
