@@ -64,10 +64,10 @@ class TrackedField extends Hidden
                 'help' => 'Select the tracked field',
                 'name' => 'defaultOption',
                 'options' => [
-                    [ 'label' => 'Query parameter (tag)', 'value' => 'tag' ],
                     [ 'label' => 'Landing Page URL', 'value' => 'absoluteLandingUrl' ],
                     [ 'label' => 'Landing Page URL (without Query String)', 'value' => 'landingUrl' ],
                     [ 'label' => 'Referrer URL', 'value' => 'referrerUrl' ],
+                    [ 'label' => 'Query parameter (tag)', 'value' => 'tag' ],
                     [ 'label' => 'All data as json string', 'value' => 'all' ],
                 ],
             ]),
