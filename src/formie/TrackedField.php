@@ -75,12 +75,15 @@ class TrackedField extends Hidden
                 'label' => 'Query Parameter',
                 'help' => 'Select the name (key) of the tracked query parameter. (Add more in the UTM Tracker plugin settings)',
                 'name' => 'queryParameter',
-                'options' => array_map(function ($tag) {
-                    return [
-                        'label' => $tag,
-                        'value' => $tag,
-                    ];
-                }, UtmTracker::$plugin->settings->getTrackableTagsArray()),
+                'options' => [
+                    ['label' => 'Select a query parameter', 'value' => ''],
+                    ...array_map(function ($tag) {
+                        return [
+                            'label' => $tag,
+                            'value' => $tag,
+                        ];
+                    }, UtmTracker::$plugin->settings->getTrackableTagsArray())
+                ],
                 'if' => '$get(defaultOption).value == tag'
             ]),
             SchemaHelper::variableTextField([
