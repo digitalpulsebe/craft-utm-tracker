@@ -2,10 +2,16 @@
 
 namespace digitalpulsebe\utmtracker\formie;
 
+use craft\base\ElementInterface;
 use craft\helpers\Html;
+use craft\helpers\Template;
 use digitalpulsebe\utmtracker\UtmTracker;
+use verbb\formie\elements\Submission;
+use verbb\formie\events\ModifyFieldEmailValueEvent;
 use verbb\formie\fields\formfields\Hidden;
 use verbb\formie\helpers\SchemaHelper;
+use verbb\formie\helpers\Variables;
+use verbb\formie\models\Notification;
 
 class TrackedField extends Hidden
 {
@@ -34,6 +40,11 @@ class TrackedField extends Hidden
                 }
             }
         }
+    }
+
+    public function getEmailHtml(Submission $submission, Notification $notification, mixed $value, array $renderOptions = []): string|null|bool
+    {
+        return Template::raw($value);
     }
 
     public static function displayName(): string
