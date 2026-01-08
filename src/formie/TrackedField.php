@@ -44,7 +44,7 @@ class TrackedField extends Hidden
 
     public function getEmailHtml(Submission $submission, Notification $notification, mixed $value, array $renderOptions = []): string|null|bool
     {
-        return Template::raw($value);
+        return Template::raw($value ?? '');
     }
 
     public static function displayName(): string
