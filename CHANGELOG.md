@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.0.5 - 2026-01-08
+
+### Fixed
+- Fix: Handle null values before passing to Template::raw() (thanks @DieterVanhove)
+
 ## 3.0.4 - 2025-12-17
 
 ### Fixed
