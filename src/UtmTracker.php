@@ -47,7 +47,7 @@ class UtmTracker extends Plugin
      */
     public static $plugin;
 
-    public ?StorageMethod $storage;
+    public ?StorageMethod $storage = null;
 
     // Public Properties
     // =========================================================================
