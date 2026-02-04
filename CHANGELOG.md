@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.0.6 - 2026-02-04
+
+### Fixed
+- Fix: Initializes storage property (thanks @john-henry)
+
 ## 3.0.5 - 2026-01-08
 
 ### Fixed
