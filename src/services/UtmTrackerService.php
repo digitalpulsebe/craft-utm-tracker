@@ -34,11 +34,6 @@ class UtmTrackerService extends Component
      */
     public function processRequest(Request $request, bool $async = false): ?StorageMethod
     {
-        if (!$request->isSiteRequest) {
-            Craft::info('UTM Tracker plugin loaded, but this is not a site request', 'utm_tracker');
-            return null;
-        }
-
         $storage = $this->createStorage();
 
         if (!$async) {
@@ -55,10 +50,6 @@ class UtmTrackerService extends Component
      */
     public function registerAsyncScript(Request $request): void
     {
-        if (!$request->getIsSiteRequest()) {
-            return;
-        }
-
         $actionUrl = UrlHelper::actionUrl('utm-tracker/api/report');
         Craft::$app->getView()->registerJs(<<<JS
 document.addEventListener("DOMContentLoaded",()=>fetch("$actionUrl",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({url:window.location.href,referrerUrl:document.referrer})}).catch(e=>console.debug(e)));

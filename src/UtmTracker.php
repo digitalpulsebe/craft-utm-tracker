@@ -83,11 +83,16 @@ class UtmTracker extends Plugin
         $async = $this->getSettings()->async;
 
         // hook on site requests
-        $this->storage = $this->utmTrackerService->processRequest(Craft::$app->request, $async);
+        if (Craft::$app->request->getIsSiteRequest()) {
+            $this->storage = $this->utmTrackerService->processRequest(Craft::$app->request, $async);
 
-        if ($async) {
-            // register async script to view
-            $this->utmTrackerService->registerAsyncScript(Craft::$app->request);
+            if ($async) {
+                // register async script to view
+                $this->utmTrackerService->registerAsyncScript(Craft::$app->request);
+            }
+        } else {
+            $this->storage = null;
+            Craft::info('UTM Tracker plugin loaded, but this is not a site request', 'utm_tracker');
         }
 
         // register custom field for Formie
