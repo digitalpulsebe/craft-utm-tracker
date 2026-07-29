@@ -3,76 +3,79 @@
 namespace digitalpulsebe\utmtracker\storage;
 
 use Craft;
-use craft\web\Request;
 use digitalpulsebe\utmtracker\models\Parameters;
 use digitalpulsebe\utmtracker\UtmTracker;
 
-class Cookie implements StorageMethod
+class Cookie extends StorageMethod
 {
     /**
-     * key to store data in the cookies
-     * @var string
+     * Key used to store data in the cookie jar.
      */
     protected string $cookieName = 'utm_tracking_parameters';
 
     /**
-     * lifetime in seconds
-     * @var int
+     * Cookie lifetime in seconds (default: two days).
      */
-    protected int $cookieLifetime = 172800; // two days in seconds: 60 * 60 * 24 * 2
+    protected int $cookieLifetime = 172800;
 
-    /**
-     * first request without parameters in session implies a new user
-     * @var bool
-     */
-    protected bool $isNewUser = false;
-
-    protected Parameters $parameters;
-
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->cookieName = UtmTracker::$plugin->getSettings()->cookieName ?? $this->cookieName;
-        $this->cookieLifetime = UtmTracker::$plugin->getSettings()->cookieLifetime ?? $this->cookieLifetime;
+        $settings = UtmTracker::$plugin->getSettings();
+        $this->cookieName = $settings->cookieName ?? $this->cookieName;
+        $this->cookieLifetime = $settings->cookieLifetime ?? $this->cookieLifetime;
 
+        // Initialise parameters to an empty instance so getParameters() is
+        // always safe before load() / initFromRequest() / initFromUrl() is called.
+        $this->parameters = new Parameters();
+    }
+
+    // =========================================================================
+    // StorageMethod implementation
+    // =========================================================================
+
+    protected function load(): void
+    {
+        $this->isLoaded = true;
         if (Craft::$app->request->getCookies()->has($this->cookieName)) {
             try {
-                $this->parameters = unserialize(Craft::$app->request->getCookies()->get($this->cookieName));
-                $this->parameters->storeQueryParameters($request);
+                $stored = new Parameters(unserialize(Craft::$app->request->getCookies()->get($this->cookieName)));
 
-                Craft::info('UTM Tracker stored parameters loaded from existing cookie', 'utm_tracker');
+                if ($stored instanceof Parameters) {
+                    $this->parameters = $stored;
+                    Craft::info('UTM Tracker stored parameters loaded from existing cookie', 'utm_tracker');
+                    return;
+                }
             } catch (\Throwable $exception) {
-                Craft::error('UTM Tracker stored parameters could not be loaded from cookie: ' . $exception->getMessage(), 'utm_tracker');
+                Craft::error(
+                    'UTM Tracker stored parameters could not be loaded from cookie: ' . $exception->getMessage(),
+                    'utm_tracker'
+                );
             }
         }
 
-        if (empty($this->parameters)) {
-            $this->parameters = Parameters::createFromRequest($request);
-            $this->isNewUser = true;
-
-            Craft::info('UTM Tracker new cookie', 'utm_tracker');
-        }
-
-        if (serialize($this->parameters) != Craft::$app->request->getCookies()->get($this->cookieName)) {
-            // only if changed
-            $cookie = Craft::createObject([
-                'class' => 'yii\web\Cookie',
-                'name' => $this->cookieName,
-                'httpOnly' => true,
-                'value' => serialize($this->parameters),
-                'expire' => time() + $this->cookieLifetime,
-            ]);
-
-            Craft::$app->getResponse()->getCookies()->add($cookie);
-        }
+        // No valid cookie found — this is a new visitor.
+        $this->isNewUser = true;
+        Craft::info('UTM Tracker data loaded from session', 'utm_tracker');
     }
 
-    public function isNewUser()
+    protected function persist(): void
     {
-        return $this->isNewUser();
-    }
+        $serialized = serialize($this->parameters?->toArray());
 
-    public function getParameters(): Parameters
-    {
-        return $this->parameters;
+        // Skip writing when nothing has changed.
+        if ($serialized === Craft::$app->request->getCookies()->get($this->cookieName)?->value) {
+            return;
+        }
+
+        $cookie = Craft::createObject([
+            'class' => 'yii\web\Cookie',
+            'name' => $this->cookieName,
+            'httpOnly' => true,
+            'value' => $serialized,
+            'expire' => time() + $this->cookieLifetime,
+        ]);
+
+        Craft::$app->getResponse()->getCookies()->add($cookie);
+        Craft::info('UTM Tracker new cookie', 'utm_tracker');
     }
 }

@@ -55,7 +55,7 @@ class UtmTracker extends Plugin
     /**
      * @inheritdoc
      */
-    public string $schemaVersion = '1.0.0';
+    public string $schemaVersion = '1.0.1';
 
     /**
      * @inheritdoc
@@ -78,8 +78,22 @@ class UtmTracker extends Plugin
             }
         );
 
+        Craft::info('UTM Tracker plugin loaded', 'utm_tracker');
+
+        $async = $this->getSettings()->async;
+
         // hook on site requests
-        $this->storage = $this->utmTrackerService->processRequest(Craft::$app->request);
+        if (Craft::$app->request->getIsSiteRequest()) {
+            $this->storage = $this->utmTrackerService->processRequest(Craft::$app->request, $async);
+
+            if ($async) {
+                // register async script to view
+                $this->utmTrackerService->registerAsyncScript(Craft::$app->request);
+            }
+        } else {
+            $this->storage = null;
+            Craft::info('UTM Tracker plugin loaded, but this is not a site request', 'utm_tracker');
+        }
 
         // register custom field for Formie
         if (class_exists(Fields::class)) {

@@ -16,6 +16,15 @@
     toggle: true
 }) }}
 
+{{ forms.checkboxField({
+    label: "Asynchronous",
+    instructions: "In case of static caching, track using an async ajax request instead of the site request",
+    id: "async",
+    name: "async",
+    checked: settings.async ?? true,
+    errors: settings.getErrors("async")
+}) }}
+
 <div id="cookies"{% if settings.storageMethod != 'cookies' %} class="hidden"{% endif %}>
     <div id="storageMethod-cookies-fields">
         {{ forms.textField({
