@@ -50,8 +50,13 @@ class UtmTrackerVariable
         return UtmTracker::$plugin->storage->getParameters();
     }
 
+    /**
+     * @deprecated since 3.1.0
+     */
     public function reportScript(): Markup
     {
+        Craft::$app->getDeprecator()->log('craft.utmTracker.reportScript()', '`craft.utmTracker.reportScript()` is deprecated. Use the async setting.');
+
         $templatePath = 'utm-tracker/_script/report';
 
         return Template::raw(Craft::$app->getView()->renderTemplate($templatePath, [], 'cp'));

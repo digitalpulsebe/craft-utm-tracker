@@ -23,24 +23,52 @@ class Parameters extends Model
     public string $landingUrl = '';
     public ?string $referrerUrl;
 
-    static function createFromRequest(Request $request): self {
-        $instance = new self();
-
-        $instance->absoluteLandingUrl = StringHelper::escape($request->getAbsoluteUrl());
-        $instance->landingUrl = StringHelper::escape($request->getHostInfo() . '/' . $request->getPathInfo());
-        $instance->referrerUrl = $request->getReferrer() ? StringHelper::escape($request->getReferrer()) : null;
-        $instance->storeQueryParameters($request);
-
-        return $instance;
-    }
-
-    public function storeQueryParameters(Request $request)
+    public function processQueryParametersFromRequest(Request $request, bool $isNewUser): void
     {
+        if ($isNewUser) {
+            // First visit — capture URL and referrer before processing query params.
+            $this->absoluteLandingUrl = StringHelper::escape($request->getAbsoluteUrl());
+            $this->landingUrl = StringHelper::escape($request->getHostInfo() . '/' . $request->getPathInfo());
+            $this->referrerUrl = $request->getReferrer()
+                ? StringHelper::escape($request->getReferrer())
+                : null;
+        }
+
         $tagsToTrack = UtmTracker::$plugin->getSettings()->getTrackableTagsArray();
 
         foreach($tagsToTrack as $tagKey) {
             if ($request->get($tagKey)) {
                 $value = $request->getQueryParam($tagKey);
+                if ($value) {
+                    $clean_value = StringHelper::stripHtml($value);
+                    $clean_value = StringHelper::escape($clean_value);
+                    $this->queryParameters[$tagKey] = $clean_value;
+                }
+            }
+        }
+    }
+
+    public function processParametersFromUrl(string $url, string $referrerUrl = null): void {
+        if (empty($this->absoluteLandingUrl)) {
+            // this might be the first request we see
+            $this->absoluteLandingUrl = $url;
+            // url without query params
+            $urlParts = parse_url($url);
+            unset($urlParts['query']);
+            $this->landingUrl = http_build_url($urlParts);
+            $this->referrerUrl = $referrerUrl;
+        }
+
+        $tagsToTrack = UtmTracker::$plugin->getSettings()->getTrackableTagsArray();
+
+        $parsedUrl = parse_url($url);
+        $queryString = $parsedUrl['query'] ?? '';
+        $queryParameters = [];
+        parse_str($queryString, $queryParameters);
+
+        foreach($tagsToTrack as $tagKey) {
+            if (isset($queryParameters[$tagKey])) {
+                $value = $queryParameters[$tagKey];
                 if ($value) {
                     $clean_value = StringHelper::stripHtml($value);
                     $clean_value = StringHelper::escape($clean_value);

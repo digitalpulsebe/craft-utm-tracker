@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Added
+- async tracking method to avoid responses being uncacheable (fixes #6)
+
+### Changed
+- `craft.utmTracker.reportScript()` is deprecated. Use the 'Asynchronous' setting instead.
+
 ## 3.0.6 - 2026-02-04
 
 ### Fixed

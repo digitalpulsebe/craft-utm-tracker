@@ -3,49 +3,47 @@
 namespace digitalpulsebe\utmtracker\storage;
 
 use Craft;
-use craft\web\Request;
 use digitalpulsebe\utmtracker\models\Parameters;
 
-class Session implements StorageMethod
+class Session extends StorageMethod
 {
     /**
-     * key to store data in the session
-     * @var string
+     * Key used to store data in the session.
      */
     protected string $sessionKey = 'utm_tracking_parameters';
 
-    /**
-     * first request without parameters in session implies a new user
-     * @var bool
-     */
-    protected bool $isNewUser = false;
-
-    protected Parameters $parameters;
-
-    public function __construct(Request $request)
+    public function __construct()
     {
+        // Initialise parameters to an empty instance so getParameters() is
+        // always safe before load() / initFromRequest() / initFromUrl() is called.
+        $this->parameters = new Parameters();
+    }
+
+    // =========================================================================
+    // StorageMethod implementation
+    // =========================================================================
+
+    protected function load(): void
+    {
+        $this->isLoaded = true;
         if (Craft::$app->getSession()->has($this->sessionKey)) {
-            $this->parameters = Craft::$app->getSession()->get($this->sessionKey);
-            $this->parameters->storeQueryParameters($request);
+            $stored = Craft::$app->getSession()->get($this->sessionKey);
 
-            Craft::info('UTM Tracker stored parameters loaded from existing session', 'utm_tracker');
-        } else {
-            $this->parameters = Parameters::createFromRequest($request);
-            $this->isNewUser = true;
-
-            Craft::info('UTM Tracker new session', 'utm_tracker');
+            if ($stored instanceof Parameters) {
+                $this->parameters = $stored;
+                Craft::info('UTM Tracker stored parameters loaded from existing session', 'utm_tracker');
+                return;
+            }
         }
 
+        // No valid session entry found — this is a new visitor.
+        $this->isNewUser = true;
+        Craft::info('UTM Tracker data loaded from session', 'utm_tracker');
+    }
+
+    protected function persist(): void
+    {
         Craft::$app->getSession()->set($this->sessionKey, $this->parameters);
-    }
-
-    public function isNewUser()
-    {
-        return $this->isNewUser();
-    }
-
-    public function getParameters(): Parameters
-    {
-        return $this->parameters;
+        Craft::info('UTM Tracker new session', 'utm_tracker');
     }
 }

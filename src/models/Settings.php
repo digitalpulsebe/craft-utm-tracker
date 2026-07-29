@@ -13,6 +13,12 @@ class Settings extends Model
     public string $storageMethod = 'session';
 
     /**
+     * whether to use async site request
+     * @var boolean
+     */
+    public bool $async = true;
+
+    /**
      * name of the cookie of the cookies storage method
      * @var string
      */
@@ -46,6 +52,7 @@ class Settings extends Model
             [['cookieName', 'cookieLifetime'], 'required', 'when' => function($model) {
                 return $model->storageMethod == 'cookies';
             }],
+            ['async', 'boolean'],
             ['cookieLifetime', 'integer', 'min' => 0],
             ['cookieName', 'match', 'pattern'=>'/^[a-zA-Z0-9\_]+$/'],
             ['trackableTags', 'required'],
