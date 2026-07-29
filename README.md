@@ -39,18 +39,19 @@ Configure options in the Craft control panel or create a file in config/utm-trac
 
 By default, you should keep track of these UTM tags:
 
-- utm_source (Campaign Source, example: Google)
-- utm_medium (Campaign Medium, example: email)
-- utm_campaign (Campaign Name, example: xmas2022)
-- utm_term (Campaign Term, example: christmas+presents)
-- utm_content (Campaign Content, example: version+A)
+- `utm_source` (Campaign Source, example: Google)
+- `utm_medium` (Campaign Medium, example: email)
+- `utm_campaign` (Campaign Name, example: xmas2022)
+- `utm_term` (Campaign Term, example: christmas+presents)
+- `utm_content` (Campaign Content, example: version+A)
 
 Also, the landing URL and referrer URL are tracked when the session is created.
 
 Other configuration (config/utm-tracker.php) options are: 
 
-- 'cookieName': the name of the cookie (when used)
-- 'cookieLifetime': lifetime of the cookie in seconds (when used)
+- `'cookieName'`: the name of the cookie (when used)
+- `'cookieLifetime'`: lifetime of the cookie in seconds (when used)
+- `'async'`: use the Asynchronous method to track data (in case of full page caching)
 
 ## Usage
 
@@ -99,19 +100,9 @@ example:
 
 ## Tracking in combination with full page caching
 
-When the pages are cached entirely (using Blitz, Varnish...) there is no way for Craft CMS to pick up the traffic.
-You will need to send and retrieve data using javascript asynchronously. 
-But beware: it might increase server load. If your application has very high traffic, consider a javascript only solution.
+When the pages are cached entirely (using Blitz, Varnish...) enable the setting 'Asynchronous'
 
-### Sending data to the backend
-
-Put this in your twig layout template file:
-
-```twig
-{{ craft.utmTracker.reportScript() }}
-```
-
-It will make a POST call to the Craft CMS backend to avoid caching.
+This will register a javascript file that sends a XHR request to the backend after the document is loaded.
 
 ### Retrieving data
 

@@ -28,6 +28,7 @@ return [
      * session|cookies
      */
     'storageMethod' => 'session',
+    'async' => true,
     'trackableTags' => [
         ['key' => 'utm_source'],
         ['key' => 'utm_medium'],
