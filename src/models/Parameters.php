@@ -54,8 +54,9 @@ class Parameters extends Model
             $this->absoluteLandingUrl = $url;
             // url without query params
             $urlParts = parse_url($url);
-            unset($urlParts['query']);
-            $this->landingUrl = http_build_url($urlParts);
+            if (is_array($urlParts)) {
+                $this->landingUrl = $urlParts['scheme'].'://'.$urlParts['host'].$urlParts['path'];
+            }
             $this->referrerUrl = $referrerUrl;
         }
 
