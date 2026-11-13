@@ -23,9 +23,12 @@
     "require": {
         "craftcms/cms": "^5.0.0-alpha.1"
     },
+    "conflict": {
+        "verbb/formie": "<4.0.0"
+    },
     "autoload": {
         "psr-4": {
-          "digitalpulsebe\\utmtracker\\": "src/"
+            "digitalpulsebe\\utmtracker\\": "src/"
         }
     },
     "extra": {
@@ -47,6 +50,6 @@
         }
     },
     "require-dev": {
-        "verbb/formie": "^3.0.0-beta.2"
+        "verbb/formie": "^4.0"
     }
 }

@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.0.0 - 2026-11-13
+
+### Added
+- support for Formie 4
+
+### Changed
+- the Formie integration now requires Formie 4. Sites on Formie 3 stay on UTM Tracker 3.x (Formie itself remains optional)
+- Tracked Field values are always resolved server-side; values posted by the browser are ignored
+
 ## 3.1.1 - 2026-10-09
 
 ### Fixed
