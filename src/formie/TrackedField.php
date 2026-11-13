@@ -2,44 +2,96 @@
 
 namespace digitalpulsebe\utmtracker\formie;
 
-use craft\base\ElementInterface;
-use craft\helpers\Html;
 use craft\helpers\Template;
 use digitalpulsebe\utmtracker\UtmTracker;
 use verbb\formie\elements\Submission;
-use verbb\formie\events\ModifyFieldEmailValueEvent;
-use verbb\formie\fields\formfields\Hidden;
+use verbb\formie\fields\Hidden;
 use verbb\formie\helpers\SchemaHelper;
-use verbb\formie\helpers\Variables;
 use verbb\formie\models\Notification;
 
 class TrackedField extends Hidden
 {
+    public const TRACKED_SOURCES = ['absoluteLandingUrl', 'landingUrl', 'referrerUrl', 'tag', 'all'];
 
     public function init(): void
     {
         parent::init();
-        $this->visibility = 'disabled';
 
-        if (!\Craft::$app->getRequest()->getIsConsoleRequest()) {
-            $storage = UtmTracker::$plugin->storage;
-
-            if ($storage) {
-                $parameters = $storage->getParameters();
-
-                if ($this->defaultOption === 'absoluteLandingUrl') {
-                    $this->defaultValue = $parameters->absoluteLandingUrl;
-                } elseif ($this->defaultOption === 'landingUrl') {
-                    $this->defaultValue = $parameters->landingUrl;
-                } elseif ($this->defaultOption === 'referrerUrl') {
-                    $this->defaultValue = $parameters->referrerUrl;
-                } elseif ($this->defaultOption === 'tag' && $this->queryParameter) {
-                    $this->defaultValue = $parameters->getQueryParameter($this->queryParameter);
-                } elseif ($this->defaultOption === 'all') {
-                    $this->defaultValue = json_encode($parameters->toArray());
-                }
-            }
+        // Formie 4: a 'disabled' visibility makes the field "unavailable" (ConditionVisibility::disabled()),
+        // so ClearHiddenValuesTask nulls its value right after it was resolved server-side.
+        // Fields saved under Formie 3 still carry visibility 'disabled' in their settings, so reset it here.
+        if ($this->visibility === 'disabled') {
+            $this->visibility = null;
         }
+    }
+
+    /**
+     * The value is always resolved server-side from the UTM storage, so the (disabled / not rendered)
+     * input never has to be posted back by the browser.
+     * Formie 4 checks this in Hidden::shouldResolveSource() when a submission is populated.
+     */
+    public function isAuthoritativeSource(): bool
+    {
+        return in_array($this->valueSource, self::TRACKED_SOURCES, true) || parent::isAuthoritativeSource();
+    }
+
+    /**
+     * Formie 4 resolves hidden field values through getDefaultValue() (used for rendering as well as submission)
+     */
+    public function getDefaultValue(): mixed
+    {
+        if (in_array($this->valueSource, self::TRACKED_SOURCES, true)) {
+            $value = $this->getTrackedValue();
+
+            if ($value !== null && $value !== '') {
+                return $value;
+            }
+
+            // fall back to the configured default value when nothing was tracked
+            return parent::getDefaultValue();
+        }
+
+        return parent::getDefaultValue();
+    }
+
+    protected function getTrackedValue(): ?string
+    {
+        if (\Craft::$app->getRequest()->getIsConsoleRequest()) {
+            return null;
+        }
+
+        $storage = UtmTracker::$plugin->storage;
+
+        if (!$storage) {
+            return null;
+        }
+
+        $parameters = $storage->getParameters();
+
+        return match ($this->valueSource) {
+            'absoluteLandingUrl' => $parameters->absoluteLandingUrl,
+            'landingUrl' => $parameters->landingUrl,
+            'referrerUrl' => $parameters->referrerUrl,
+            'tag' => $this->queryParameter ? $parameters->getQueryParameter($this->queryParameter) : null,
+            'all' => json_encode($parameters->toArray()),
+            default => null,
+        };
+    }
+
+    /**
+     * Allow the custom value sources in the parent's `valueSource` range validation
+     */
+    protected function defineRules(): array
+    {
+        return [];
+
+        $rules = array_filter(parent::defineRules(), function ($rule) {
+            return !(is_array($rule) && ($rule[0] ?? null) === ['valueSource'] && ($rule[1] ?? null) === 'in');
+        });
+
+        $rules[] = [['valueSource'], 'in', 'range' => self::TRACKED_SOURCES];
+
+        return array_values($rules);
     }
 
     public function getEmailHtml(Submission $submission, Notification $notification, mixed $value, array $renderOptions = []): string|null|bool
@@ -63,7 +115,7 @@ class TrackedField extends Hidden
     /**
      * @inheritDoc
      */
-    public function defineGeneralSchema(): array
+    public function defineFormBuilderGeneralSchema(): array
     {
         return [
             SchemaHelper::labelField([
@@ -73,7 +125,7 @@ class TrackedField extends Hidden
             SchemaHelper::selectField([
                 'label' => 'Field',
                 'help' => 'Select the tracked field',
-                'name' => 'defaultOption',
+                'name' => 'valueSource',
                 'options' => [
                     [ 'label' => 'Landing Page URL', 'value' => 'absoluteLandingUrl' ],
                     [ 'label' => 'Landing Page URL (without Query String)', 'value' => 'landingUrl' ],
@@ -95,7 +147,7 @@ class TrackedField extends Hidden
                         ];
                     }, UtmTracker::$plugin->settings->getTrackableTagsArray())
                 ],
-                'if' => '$get(defaultOption).value == tag'
+                'if' => 'valueSource == "tag"'
             ]),
             SchemaHelper::variableTextField([
                 'label' => 'Default Value',
@@ -105,17 +157,15 @@ class TrackedField extends Hidden
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getPreviewInputHtml(): string
+    public function defineFormBuilderPreviewSchema(): array
     {
-        return Html::tag('input', '', [
-            'type' => 'text',
-            'disabled' => true,
-            'class' => 'fui-field-input',
-            'placeholder' => '- user tracked data -',
-        ]);
+        return [
+            SchemaHelper::previewInput([
+                'type' => 'hidden',
+                'wrapperClassName' => 'formie-field-preview-control formie-field-preview-control--hidden',
+                'value' => '- user tracked data -',
+            ]),
+        ];
     }
 
     public static function getFrontEndInputTemplatePath(): string
